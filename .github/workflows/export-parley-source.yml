@@ -1,0 +1,27 @@
+name: Export Parley Smart Source
+
+on:
+  push:
+    branches:
+      - chatgpt-parley-smart
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone upstream Parley
+        run: git clone --depth 1 https://github.com/sync-kyoto-jp/parley.git parley
+      - name: Apply current smart overlay
+        run: |
+          cat smart-overlay.part00 smart-overlay.part01 smart-overlay.part02 smart-overlay.part03 smart-overlay.part04 | base64 -d | tar -xz -C parley
+          rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/TranslationSession.kt
+          rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/RealtimeEvents.kt
+      - name: Archive full modified source
+        run: tar -czf Parley-Live-Smart-source.tar.gz parley
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Parley-Live-Smart-source
+          path: Parley-Live-Smart-source.tar.gz
+          retention-days: 1
