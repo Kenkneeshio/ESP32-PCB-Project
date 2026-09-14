@@ -1,4 +1,4 @@
-name: Build Parley APK
+name: Build Parley Live APK
 
 on:
   push:
@@ -26,6 +26,12 @@ jobs:
       - name: Clone Parley
         run: git clone --depth 1 https://github.com/sync-kyoto-jp/parley.git parley
 
+      - name: Apply GPT-Live and audio-routing changes
+        run: |
+          base64 -d parley-live-overlay.b64 | tar -xz -C parley
+          rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/TranslationSession.kt
+          rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/RealtimeEvents.kt
+
       - name: Build debug APK
         working-directory: parley
         run: |
@@ -35,12 +41,12 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p output
-          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-debug.apk
+          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-Live-debug.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Parley-debug-apk
-          path: output/Parley-debug.apk
+          name: Parley-Live-debug-apk
+          path: output/Parley-Live-debug.apk
           if-no-files-found: error
           retention-days: 7
