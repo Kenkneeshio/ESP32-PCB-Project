@@ -1,4 +1,4 @@
-name: Build Parley Live Private V2
+name: Build Parley Live Private V3
 
 on:
   push:
@@ -35,6 +35,9 @@ jobs:
       - name: Apply Private V2 overlay
         run: cat private-overlay.part00 private-overlay.part01 | base64 -d | tar -xz -C parley
 
+      - name: Apply Private V3 audio routing overlay
+        run: cat v3-overlay.part00 v3-overlay.part01 v3-overlay.part02 | base64 -d | tar -xz -C parley
+
       - name: Build debug APK
         working-directory: parley
         run: |
@@ -44,13 +47,13 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p output
-          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-Live-Private-V2-placeholder.apk
-          sha256sum output/Parley-Live-Private-V2-placeholder.apk
+          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-Live-Private-V3-placeholder.apk
+          sha256sum output/Parley-Live-Private-V3-placeholder.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Parley-Live-Private-V2-placeholder-apk
-          path: output/Parley-Live-Private-V2-placeholder.apk
+          name: Parley-Live-Private-V3-placeholder-apk
+          path: output/Parley-Live-Private-V3-placeholder.apk
           if-no-files-found: error
           retention-days: 3
