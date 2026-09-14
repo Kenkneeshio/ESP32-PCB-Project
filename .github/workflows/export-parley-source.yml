@@ -1,9 +1,9 @@
-name: Export Parley Smart Source
+name: Export Parley Private V2 Source
 
 on:
   push:
     branches:
-      - chatgpt-parley-smart
+      - chatgpt-parley-private-v2
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,12 @@ jobs:
           cat smart-overlay.part00 smart-overlay.part01 smart-overlay.part02 smart-overlay.part03 smart-overlay.part04 | base64 -d | tar -xz -C parley
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/TranslationSession.kt
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/RealtimeEvents.kt
+      - name: Apply current private V2 overlay
+        run: cat private-overlay.part00 private-overlay.part01 | base64 -d | tar -xz -C parley
       - name: Archive full modified source
-        run: tar -czf Parley-Live-Smart-source.tar.gz parley
+        run: tar -czf Parley-Live-Private-V2-source.tar.gz parley
       - uses: actions/upload-artifact@v4
         with:
-          name: Parley-Live-Smart-source
-          path: Parley-Live-Smart-source.tar.gz
+          name: Parley-Live-Private-V2-source
+          path: Parley-Live-Private-V2-source.tar.gz
           retention-days: 1
