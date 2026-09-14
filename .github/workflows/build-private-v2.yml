@@ -38,6 +38,12 @@ jobs:
       - name: Apply Private V3 audio routing overlay
         run: cat v3-overlay.part00 v3-overlay.part01 v3-overlay.part02 | base64 -d | tar -xz -C parley
 
+      - name: Fix HistoryScreen imports
+        run: |
+          FILE=parley/app/src/main/java/jp/kyoto/sync/parley/ui/HistoryScreen.kt
+          sed -i '/import androidx.compose.material3.Icon$/i import androidx.compose.material3.HorizontalDivider' "$FILE"
+          sed -i '/import androidx.compose.ui.text.style.TextOverflow$/i import androidx.compose.ui.text.font.FontWeight' "$FILE"
+
       - name: Build debug APK
         working-directory: parley
         run: |
