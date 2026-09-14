@@ -1,9 +1,9 @@
-name: Build Parley Live APK
+name: Build Parley Live Smart APK
 
 on:
   push:
     branches:
-      - chatgpt-parley-build
+      - chatgpt-parley-smart
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check out temporary build branch
+      - name: Check out build branch
         uses: actions/checkout@v4
 
       - name: Set up Java 17
@@ -26,9 +26,9 @@ jobs:
       - name: Clone Parley
         run: git clone --depth 1 https://github.com/sync-kyoto-jp/parley.git parley
 
-      - name: Apply GPT-Live and audio-routing changes
+      - name: Apply GPT-Live smart interpreter changes
         run: |
-          base64 -d parley-live-overlay.b64 | tar -xz -C parley
+          cat smart-overlay.part00 smart-overlay.part01 smart-overlay.part02 smart-overlay.part03 smart-overlay.part04 | base64 -d | tar -xz -C parley
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/TranslationSession.kt
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/RealtimeEvents.kt
 
@@ -41,12 +41,13 @@ jobs:
       - name: Collect APK
         run: |
           mkdir -p output
-          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-Live-debug.apk
+          cp parley/app/build/outputs/apk/debug/app-debug.apk output/Parley-Live-Smart.apk
+          sha256sum output/Parley-Live-Smart.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Parley-Live-debug-apk
-          path: output/Parley-Live-debug.apk
+          name: Parley-Live-Smart-apk
+          path: output/Parley-Live-Smart.apk
           if-no-files-found: error
           retention-days: 7
