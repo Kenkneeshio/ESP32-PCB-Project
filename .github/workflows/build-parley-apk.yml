@@ -31,6 +31,8 @@ jobs:
           cat smart-overlay.part00 smart-overlay.part01 smart-overlay.part02 smart-overlay.part03 smart-overlay.part04 | base64 -d | tar -xz -C parley
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/TranslationSession.kt
           rm -f parley/app/src/main/java/jp/kyoto/sync/parley/net/RealtimeEvents.kt
+          sed -i 's/applicationId = "jp.kyoto.sync.parley.live"/applicationId = "jp.kyoto.sync.parley.live.smart"/' parley/app/build.gradle.kts
+          sed -i 's#<string name="app_name">Parley Live</string>#<string name="app_name">Parley Live Smart</string>#' parley/app/src/main/res/values/strings.xml
 
       - name: Build debug APK
         working-directory: parley
